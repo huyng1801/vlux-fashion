@@ -1,0 +1,72 @@
+spring-boot-project/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── example/
+│   │   │           ├── config/
+│   │   │           │   └── AppConfig.java
+│   │   │           ├── controller/
+│   │   │           │   ├── AdminUserController.java
+│   │   │           │   ├── BannerController.java
+│   │   │           │   └── ProductController.java
+│   │   │           ├── model/
+│   │   │           │   ├── AdminUser.java
+│   │   │           │   ├── Banner.java
+│   │   │           │   ├── Category.java
+│   │   │           │   ├── Manufacturer.java
+│   │   │           │   ├── Origin.java
+│   │   │           │   ├── Product.java
+│   │   │           │   ├── ProductFlavor.java
+│   │   │           │   ├── ProductImage.java
+│   │   │           │   ├── ProductCategory.java
+│   │   │           │   ├── Order.java
+│   │   │           │   └── OrderItem.java
+│   │   │           ├── repository/
+│   │   │           │   ├── AdminUserRepository.java
+│   │   │           │   ├── BannerRepository.java
+│   │   │           │   ├── CategoryRepository.java
+│   │   │           │   ├── ManufacturerRepository.java
+│   │   │           │   ├── OriginRepository.java
+│   │   │           │   ├── ProductRepository.java
+│   │   │           │   ├── ProductFlavorRepository.java
+│   │   │           │   ├── ProductImageRepository.java
+│   │   │           │   ├── ProductCategoryRepository.java
+│   │   │           │   ├── OrderRepository.java
+│   │   │           │   └── OrderItemRepository.java
+│   │   │           ├── service/
+│   │   │           │   ├── AdminUserService.java
+│   │   │           │   ├── BannerService.java
+│   │   │           │   ├── CategoryService.java
+│   │   │           │   ├── ManufacturerService.java
+│   │   │           │   ├── OriginService.java
+│   │   │           │   ├── ProductService.java
+│   │   │           │   ├── ProductFlavorService.java
+│   │   │           │   ├── ProductImageService.java
+│   │   │           │   ├── ProductCategoryService.java
+│   │   │           │   ├── OrderService.java
+│   │   │           │   └── OrderItemService.java
+│   │   │           ├── SpringBootProjectApplication.java
+│   │   │           └── util/
+│   │   │               └── CustomExceptions.java
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       ├── static/
+│   │       └── templates/
+│   └── test/
+│       ├── java/
+│       │   └── com/
+│       │       └── example/
+│       │           ├── controller/
+│       │           │   ├── AdminUserControllerTest.java
+│       │           │   ├── BannerControllerTest.java
+│       │           │   └── ProductControllerTest.java
+│       │           ├── service/
+│       │           │   ├── AdminUserServiceTest.java
+│       │           │   ├── BannerServiceTest.java
+│       │           │   ├── ProductServiceTest.java
+│       │           │   └── OtherServiceTests.java
+│       │           └── SpringBootProjectApplicationTests.java
+│       └── resources/
+│           └── application-test.properties
+└── pom.xml (or build.gradle)
