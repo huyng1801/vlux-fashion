@@ -27,16 +27,12 @@ public class BannerDataSeeder {
                 banner1.setImageUrl("https://s3-wheycenter.s3.ap-southeast-2.amazonaws.com/wheycenter/banner/66cc9a5744867.jpg");
                 banner1.setLink("https://www.linkedin.com/in/huy-nguyen-088464266/");
                 banner1.setIsVisible(true);
-                banner1.setCreatedAt(new Date());
-                banner1.setUpdatedAt(new Date());
 
                 Banner banner2 = new Banner();
                 banner2.setTitle("Evogen");
                 banner2.setImageUrl("https://s3-wheycenter.s3.ap-southeast-2.amazonaws.com/wheycenter/banner/66cc9c4d490a7.jpg");
                 banner2.setLink("https://www.linkedin.com/in/huy-nguyen-088464266/");
                 banner2.setIsVisible(true);
-                banner2.setCreatedAt(new Date());
-                banner2.setUpdatedAt(new Date());
 
                 // Save banners to the database
                 bannerRepository.save(banner1);

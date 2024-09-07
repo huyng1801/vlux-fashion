@@ -24,26 +24,18 @@ public class CategoryDataSeeder {
             Category wheyProtein = new Category();
             wheyProtein.setCategoryId("whey-protein");
             wheyProtein.setCategoryName("Whey Protein");
-            wheyProtein.setCreatedAt(new Date());
-            wheyProtein.setUpdatedAt(new Date());
 
             Category massGainer = new Category();
             massGainer.setCategoryId("mass-gainer");
             massGainer.setCategoryName("Mass Gainer");
-            massGainer.setCreatedAt(new Date());
-            massGainer.setUpdatedAt(new Date());
 
             Category preWorkout = new Category();
             preWorkout.setCategoryId("pre-workout");
             preWorkout.setCategoryName("Pre-Workout");
-            preWorkout.setCreatedAt(new Date());
-            preWorkout.setUpdatedAt(new Date());
 
             Category eaa = new Category();
             eaa.setCategoryId("eaa");
             eaa.setCategoryName("EAA");
-            eaa.setCreatedAt(new Date());
-            eaa.setUpdatedAt(new Date());
 
             // Save categories to the database
             categoryRepository.save(wheyProtein);

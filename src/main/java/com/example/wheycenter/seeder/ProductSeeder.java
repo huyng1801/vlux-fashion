@@ -1,13 +1,12 @@
 package com.example.wheycenter.seeder;
 
+import com.example.wheycenter.model.Category;
 import com.example.wheycenter.model.Manufacturer;
 import com.example.wheycenter.model.Origin;
 import com.example.wheycenter.model.Product;
 import com.example.wheycenter.repository.CategoryRepository;
 import com.example.wheycenter.repository.ManufacturerRepository;
 import com.example.wheycenter.repository.OriginRepository;
-import com.example.wheycenter.repository.ProductFlavorRepository;
-import com.example.wheycenter.repository.ProductImageRepository;
 import com.example.wheycenter.repository.ProductRepository;
 
 import org.slf4j.Logger;
@@ -18,27 +17,28 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 @Component
-public class ProductDataSeeder {
+public class ProductSeeder {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductDataSeeder.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductSeeder.class);
 
     @Bean
     CommandLineRunner seedProducts(
             ProductRepository productRepository,
             OriginRepository originRepository,
             ManufacturerRepository manufacturerRepository,
-            CategoryRepository categoryRepository,
-            ProductFlavorRepository productFlavorRepository,
-            ProductImageRepository productImageRepository) {
+            CategoryRepository categoryRepository) {
 
         return args -> {
-            if (productRepository.count() == 0) { // To prevent duplicate entries
-
+            if (productRepository.count() == 0) {
                 // Retrieve existing entities
-                Origin origin = originRepository.findById(1).orElse(null); // Example ID
-                Manufacturer manufacturer = manufacturerRepository.findById("labrada").orElse(null); // Example ID
+                Category massGainer = categoryRepository.findById("mass-gainer").orElseThrow(() -> new RuntimeException("Category 'mass-gainer' not found"));
+                Category eaa = categoryRepository.findById("eaa").orElseThrow(() -> new RuntimeException("Category 'eaa' not found"));
+                Origin origin = originRepository.findById(1).orElseThrow(() -> new RuntimeException("Origin with ID 1 not found"));
+                Manufacturer evogen = manufacturerRepository.findById("evogen").orElseThrow(() -> new RuntimeException("Manufacturer 'evogen' not found"));
+
                 // Create and save products
                 Product superHuge = new Product();
                 superHuge.setProductId("super-huge");
@@ -50,7 +50,8 @@ public class ProductDataSeeder {
                 superHuge.setCreatedAt(new Date());
                 superHuge.setUpdatedAt(new Date());
                 superHuge.setOrigin(origin);
-                superHuge.setManufacturer(manufacturer);
+                superHuge.setManufacturer(evogen);
+                superHuge.setCategories(Set.of(massGainer)); // Use existing category
 
                 Product aminoKem = new Product();
                 aminoKem.setProductId("amino-kem");
@@ -62,7 +63,8 @@ public class ProductDataSeeder {
                 aminoKem.setCreatedAt(new Date());
                 aminoKem.setUpdatedAt(new Date());
                 aminoKem.setOrigin(origin);
-                aminoKem.setManufacturer(manufacturer);
+                aminoKem.setManufacturer(evogen);
+                aminoKem.setCategories(Set.of(eaa)); // Use existing category
 
                 // Save products to the database
                 productRepository.save(superHuge);

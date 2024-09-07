@@ -24,13 +24,9 @@ public class OriginDataSeeder {
                 // Create and save origins with Vietnamese data
                 Origin origin1 = new Origin();
                 origin1.setCountry("Mỹ"); // Vietnam name for USA
-                origin1.setCreatedAt(new Date());
-                origin1.setUpdatedAt(new Date());
 
                 Origin origin2 = new Origin();
                 origin2.setCountry("Nauy"); // Vietnam name for Norway
-                origin2.setCreatedAt(new Date());
-                origin2.setUpdatedAt(new Date());
 
                 // Save origins to the database
                 originRepository.save(origin1);

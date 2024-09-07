@@ -26,22 +26,16 @@ public class ManufacturerDataSeeder {
                 labrada.setManufacturerId("labrada");
                 labrada.setManufacturerName("LABRADA");
                 labrada.setDescription("Nhà sản xuất thực phẩm bổ sung hàng đầu tại Hoa Kỳ.");
-                labrada.setCreatedAt(new Date());
-                labrada.setUpdatedAt(new Date());
 
                 Manufacturer evogen = new Manufacturer();
                 evogen.setManufacturerId("evogen");
                 evogen.setManufacturerName("EVOGEN");
                 evogen.setDescription("Thương hiệu quốc tế cung cấp các sản phẩm bổ sung chất lượng cao.");
-                evogen.setCreatedAt(new Date());
-                evogen.setUpdatedAt(new Date());
 
                 Manufacturer nortech = new Manufacturer();
                 nortech.setManufacturerId("nortech");
                 nortech.setManufacturerName("Nortech");
                 nortech.setDescription("Cung cấp các sản phẩm dinh dưỡng thể thao và sức khỏe.");
-                nortech.setCreatedAt(new Date());
-                nortech.setUpdatedAt(new Date());
 
                 // Save manufacturers to the database
                 manufacturerRepository.save(labrada);

@@ -1,5 +1,9 @@
 package com.example.wheycenter.repository;
 
-public class ProductImageRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.wheycenter.model.ProductImage;
+
+public interface ProductImageRepository extends JpaRepository<ProductImage, Integer> {
     
 }

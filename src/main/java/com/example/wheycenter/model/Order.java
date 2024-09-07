@@ -186,8 +186,8 @@ public class Order {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = PaymentMethod.valueOf(paymentMethod.toUpperCase());
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public BigDecimal getTotalPrice() {
@@ -250,7 +250,6 @@ public class Order {
     protected void onCreate() {
         this.createdAt = new Date();
         this.updatedAt = new Date();
-        this.orderId = generateOrderId();
     }
 
     @PreUpdate
@@ -269,7 +268,7 @@ public class Order {
         }
     }
 
-    private String generateOrderId() {
+    public static String generateOrderId() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return sdf.format(new Date());
     }
