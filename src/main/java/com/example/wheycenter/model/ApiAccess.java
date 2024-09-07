@@ -3,8 +3,6 @@ package com.example.wheycenter.model;
 import jakarta.persistence.*;
 import java.util.Date;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "api_access")
 public class ApiAccess {
@@ -63,19 +61,5 @@ public class ApiAccess {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-           if (this.apiId == null) {
-            this.apiId = UUID.randomUUID().toString(); // Generate UUID as a String
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = new Date();
     }
 }

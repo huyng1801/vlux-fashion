@@ -52,6 +52,8 @@ public class ProductSeeder {
                 superHuge.setOrigin(origin);
                 superHuge.setManufacturer(evogen);
                 superHuge.setCategories(Set.of(massGainer)); // Use existing category
+                superHuge.setCreatedAt(new Date());
+                superHuge.setUpdatedAt(new Date());
 
                 Product aminoKem = new Product();
                 aminoKem.setProductId("amino-kem");
@@ -65,6 +67,8 @@ public class ProductSeeder {
                 aminoKem.setOrigin(origin);
                 aminoKem.setManufacturer(evogen);
                 aminoKem.setCategories(Set.of(eaa)); // Use existing category
+                aminoKem.setCreatedAt(new Date());
+                aminoKem.setUpdatedAt(new Date());
 
                 // Save products to the database
                 productRepository.save(superHuge);

@@ -66,6 +66,22 @@ public class Role {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
+    
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     public Set<ApiAccess> getApiAccess() {
         return apiAccess;
@@ -73,19 +89,5 @@ public class Role {
 
     public void setApiAccess(Set<ApiAccess> apiAccess) {
         this.apiAccess = apiAccess;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-        if (this.roleId == null) {
-            this.roleId = UUID.randomUUID().toString(); 
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = new Date();
     }
 }

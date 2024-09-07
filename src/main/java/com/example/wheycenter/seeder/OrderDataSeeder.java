@@ -40,6 +40,8 @@ public class OrderDataSeeder {
                 order1.setTotalPrice(BigDecimal.valueOf(499000));
                 order1.setIsPaid(true);
                 order1.setIsDelivered(false);
+                order1.setCreatedAt(new Date());
+                order1.setUpdatedAt(new Date());
                 // Set additional fields if necessary
                 orderRepository.save(order1);
 
@@ -60,6 +62,8 @@ public class OrderDataSeeder {
                 order2.setTotalPrice(BigDecimal.valueOf(299000));
                 order2.setIsPaid(false);
                 order2.setIsDelivered(false);
+                order2.setCreatedAt(new Date());
+                order2.setUpdatedAt(new Date());
                 // Set additional fields if necessary
                 orderRepository.save(order2);
 

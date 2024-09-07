@@ -1,34 +1,22 @@
-package com.example.wheycenter.model;
+package com.example.wheycenter.response;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.util.Date;
 
-@Entity
-@Table(name = "manufacturer")
-public class Manufacturer {
-    
-    @Id
-    @Column(name = "manufacturer_id", length = 64) // Adjust length as needed
-    private String manufacturerId;  // Changed to String
+public class ManufacturerResponse {
 
-    @Column(name = "manufacturer_name", nullable = false, length = 100)
+    private String manufacturerId;
     private String manufacturerName;
-    
-    @Column(name = "description", length = 1024)
     private String description;
-    
-    @Column(name = "created_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    
-    @Column(name = "updated_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+
+    public ManufacturerResponse(String manufacturerId, String manufacturerName, String description, Date createdAt, Date updatedAt) {
+        this.manufacturerId = manufacturerId;
+        this.manufacturerName = manufacturerName;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
     // Getters and Setters
 

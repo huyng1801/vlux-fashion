@@ -1,37 +1,23 @@
-package com.example.wheycenter.model;
+package com.example.wheycenter.response;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.util.Date;
 
-@Entity
-@Table(name = "origin")
-public class Origin {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "origin_id")
+public class OriginResponse {
+
     private Integer originId;
-    
-    @Column(name = "country", nullable = false, length = 50)
     private String country;
-    
-    @Column(name = "created_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    
-    @Column(name = "updated_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    public OriginResponse(Integer originId, String country, Date createdAt, Date updatedAt) {
+        this.originId = originId;
+        this.country = country;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
     // Getters and Setters
-    
+
     public Integer getOriginId() {
         return originId;
     }
@@ -63,5 +49,4 @@ public class Origin {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }

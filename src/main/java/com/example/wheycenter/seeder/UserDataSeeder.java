@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -46,6 +47,8 @@ public class UserDataSeeder {
                 adminUser.setEmail("huynguyendev18012003@gmail.com");
                 adminUser.setHashPassword(passwordEncoder.encode("123456")); // Encrypt the password
                 adminUser.setIsActive(true);
+                adminUser.setCreatedAt(new Date());
+                adminUser.setUpdatedAt(new Date());
                 Set<Role> adminRoles = new HashSet<>();
                 adminRoles.add(adminRole);
                 adminUser.setRoles(adminRoles);
@@ -58,6 +61,8 @@ public class UserDataSeeder {
                 employeeUser.setEmail("huyng.1801@gmail.com");
                 employeeUser.setHashPassword(passwordEncoder.encode("123456")); // Encrypt the password
                 employeeUser.setIsActive(true);
+                employeeUser.setCreatedAt(new Date());
+                employeeUser.setUpdatedAt(new Date());
                 Set<Role> employeeRoles = new HashSet<>();
                 employeeRoles.add(employeeRole);
                 employeeUser.setRoles(employeeRoles);

@@ -177,15 +177,4 @@ public class Product {
     public void setImages(List<ProductImage> images) {
         this.images = images;
     }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = new Date();
-    }
 }

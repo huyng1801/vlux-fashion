@@ -1,46 +1,32 @@
-package com.example.wheycenter.model;
+package com.example.wheycenter.response;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.util.Date;
 
-@Entity
-@Table(name = "banner")
-public class Banner {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "banner_id")
+public class BannerResponse {
+
     private Integer bannerId;
-    
-    @Column(name = "title", nullable = false, length = 100)
     private String title;
-    
-    @Column(name = "image_url", nullable = false, length = 256)
     private String imageUrl;
-    
-    @Column(name = "link", length = 512)
     private String link;
-    
-    @Column(name = "is_visible", nullable = false)
     private Boolean isVisible;
-    
-    @Column(name = "created_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    
-    @Column(name = "updated_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    // Constructors
+    public BannerResponse() {
+    }
+
+    public BannerResponse(Integer bannerId, String title, String imageUrl, String link, Boolean isVisible, Date createdAt, Date updatedAt) {
+        this.bannerId = bannerId;
+        this.title = title;
+        this.imageUrl = imageUrl;
+        this.link = link;
+        this.isVisible = isVisible;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    // Getters and Setters
     public Integer getBannerId() {
         return bannerId;
     }

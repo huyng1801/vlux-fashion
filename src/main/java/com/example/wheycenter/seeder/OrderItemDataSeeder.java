@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Component
 public class OrderItemDataSeeder {
@@ -39,7 +40,7 @@ public class OrderItemDataSeeder {
                 item1.setQuantity(2);
                 item1.setUnitPrice(BigDecimal.valueOf(2200000)); 
                 item1.setOrder(order1);
-                item1.setProductFlavor(flavor1);
+                item1.setProductFlavor(flavor1);     
                 orderItemRepository.save(item1);
 
                 OrderItem item2 = new OrderItem();
