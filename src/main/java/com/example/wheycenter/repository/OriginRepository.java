@@ -1,5 +1,7 @@
 package com.example.wheycenter.repository;
 
-public class OriginRepository {
-    
+import com.example.wheycenter.model.Origin;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OriginRepository extends JpaRepository<Origin, Integer> {
 }
