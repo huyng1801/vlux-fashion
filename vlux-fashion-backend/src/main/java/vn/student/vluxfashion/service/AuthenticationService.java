@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import vn.student.vluxfashion.dto.LoginUserDto;
 import vn.student.vluxfashion.dto.UserDto;
-import vn.student.vluxfashion.model.User;
+import vn.student.vluxfashion.model.AdminUser;
 import vn.student.vluxfashion.repository.UserRepository;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-   public User authenticate(LoginUserDto input) {
+   public AdminUser authenticate(LoginUserDto input) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 input.getEmail(),
@@ -37,7 +37,7 @@ public class AuthenticationService {
             )
         );
 
-        User user = userRepository.findByEmail(input.getEmail());
+        AdminUser user = userRepository.findByEmail(input.getEmail());
         return user;
     }
 
@@ -47,7 +47,7 @@ public class AuthenticationService {
                 .collect(Collectors.toList());
     }
 
-    private UserDto convertToUserDto(User user) {
+    private UserDto convertToUserDto(AdminUser user) {
         UserDto userDto = new UserDto();
         userDto.setUserId(user.getUserId());
         userDto.setFirstName(user.getFullName());

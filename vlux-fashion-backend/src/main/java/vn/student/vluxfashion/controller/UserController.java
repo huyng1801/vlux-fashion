@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import vn.student.vluxfashion.model.User;
+import vn.student.vluxfashion.model.AdminUser;
 import vn.student.vluxfashion.service.UserService;
 
 import java.util.List;
@@ -22,17 +22,17 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
+    public ResponseEntity<AdminUser> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User currentUser = (User) authentication.getPrincipal();
+        AdminUser currentUser = (AdminUser) authentication.getPrincipal();
 
         return ResponseEntity.ok(currentUser);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.allUsers();
+    public ResponseEntity<List<AdminUser>> allUsers() {
+        List <AdminUser> users = userService.allUsers();
 
         return ResponseEntity.ok(users);
     }

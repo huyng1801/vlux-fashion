@@ -2,7 +2,7 @@ package vn.student.vluxfashion.service;
 
 import org.springframework.stereotype.Service;
 
-import vn.student.vluxfashion.model.User;
+import vn.student.vluxfashion.model.AdminUser;
 import vn.student.vluxfashion.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> allUsers() {
-        List<User> users = new ArrayList<>();
+    public List<AdminUser> allUsers() {
+        List<AdminUser> users = new ArrayList<>();
 
         userRepository.findAll().forEach(users::add);
 

@@ -26,7 +26,7 @@ public class ProductSize {
     private Integer productSizeId;
     
     @Column(name = "size_value", nullable = false, length = 30)
-    private String flavorName;
+    private String sizeValue;
     
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;

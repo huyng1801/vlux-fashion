@@ -28,6 +28,9 @@ public class Brand {
 
     @Column(name = "brand_name", nullable = false, length = 50)
     private String brandName;
+
+    @Column(name = "image_url", length = 128)  
+    private String imageUrl; 
     
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

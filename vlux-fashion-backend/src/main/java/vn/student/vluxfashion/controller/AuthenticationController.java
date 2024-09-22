@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.student.vluxfashion.dto.LoginUserDto;
-import vn.student.vluxfashion.model.User;
+import vn.student.vluxfashion.model.AdminUser;
 import vn.student.vluxfashion.response.LoginResponse;
 import vn.student.vluxfashion.service.AuthenticationService;
 import vn.student.vluxfashion.service.JwtService;
@@ -30,7 +30,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
         // Authenticate the user
-        User authenticatedUser = authenticationService.authenticate(loginUserDto);
+        AdminUser authenticatedUser = authenticationService.authenticate(loginUserDto);
     
         // Get roles as a list of strings
         List<String> roleIds = authenticatedUser.getAuthorities().stream()

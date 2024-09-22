@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import vn.student.vluxfashion.model.User;
+import vn.student.vluxfashion.model.AdminUser;
 import vn.student.vluxfashion.repository.UserRepository;
 
 @Configuration
@@ -24,7 +24,7 @@ public class ApplicationConfiguration {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            User user = userRepository.findByEmail(username);
+            AdminUser user = userRepository.findByEmail(username);
             if (user == null) {
                 throw new UsernameNotFoundException("User not found");
             }

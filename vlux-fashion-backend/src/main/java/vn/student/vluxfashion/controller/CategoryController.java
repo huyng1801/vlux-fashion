@@ -38,39 +38,32 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody @Valid CategoryDto categoryDto, BindingResult result) {
-        // Check for validation errors
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(ValidationUtils.getErrorMessages(result));
         }
 
-        // Check if the category name already exists
         if (categoryService.isCategoryNameExists(categoryDto.getCategoryName())) {
             return ResponseEntity.badRequest().body("Category name already exists");
         }
 
-        // Attempt to create the category
         CategoryResponse createdCategory = categoryService.createCategory(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable("id") Integer categoryId, @RequestBody @Valid CategoryDto categoryDto, BindingResult result) {
-        // Check for validation errors
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(ValidationUtils.getErrorMessages(result));
         }
 
-        // Check if the category exists
         if (categoryService.getCategoryById(categoryId) == null) {
             throw new ResourceNotFoundException("Category with ID " + categoryId + " not found");
         }
 
-        // Check if the category name already exists for other IDs
         if (categoryService.isCategoryNameExistsForOtherId(categoryDto.getCategoryName(), categoryId)) {
             return ResponseEntity.badRequest().body("Category name already exists for another category");
         }
 
-        // Attempt to update the category
         CategoryResponse updatedCategory = categoryService.updateCategory(categoryId, categoryDto);
         return ResponseEntity.ok(updatedCategory);
     }

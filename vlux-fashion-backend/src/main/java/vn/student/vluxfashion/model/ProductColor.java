@@ -32,9 +32,6 @@ public class ProductColor {
     @Column(name = "color_name", nullable = false, length = 30)
     private String colorName;
 
-    @Column(name = "color_value", nullable = false, length = 15)
-    private String colorValue;
-
     @Column(name = "image_url", nullable = false, length = 256)
     private String imageUrl;
     
