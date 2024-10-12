@@ -1,11 +1,23 @@
 package vn.student.vluxfashion.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.student.vluxfashion.dto.ProductDto;
+import vn.student.vluxfashion.response.ProductResponse;
+import vn.student.vluxfashion.exception.ResourceNotFoundException;
 import vn.student.vluxfashion.model.Product;
+import vn.student.vluxfashion.model.ProductColor;
+import vn.student.vluxfashion.model.Brand;
+import vn.student.vluxfashion.model.Gender;
+import vn.student.vluxfashion.model.SubCategory;
 import vn.student.vluxfashion.repository.ProductRepository;
-
-import java.util.List;
+import vn.student.vluxfashion.repository.BrandRepository;
+import vn.student.vluxfashion.repository.ProductColorRepository;
+import vn.student.vluxfashion.repository.SubCategoryRepository;
 
 @Service
 public class ProductService {
@@ -13,27 +25,136 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    @Autowired
+    private BrandRepository brandRepository;
+
+    @Autowired
+    private SubCategoryRepository subCategoryRepository;
+
+    @Autowired
+    private ProductColorRepository productColorRepository;
+
+    // Create a new product
+    public ProductResponse createProduct(ProductDto productDto) {
+        // Fetching Brand
+        Brand brand = brandRepository.findById(productDto.getBrandId())
+                .orElseThrow(() -> new ResourceNotFoundException("Brand not found with ID: " + productDto.getBrandId()));
+
+        // Fetching SubCategory
+        SubCategory subCategory = subCategoryRepository.findById(productDto.getSubCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("SubCategory not found with ID: " + productDto.getSubCategoryId()));
+
+        Product product = new Product();
+        product.setProductName(productDto.getProductName());
+        product.setOriginalPrice(productDto.getOriginalPrice());
+        product.setUnitPrice(productDto.getUnitPrice());
+        product.setIsVisible(productDto.getIsVisible());
+        product.setBrand(brand);  // Setting the fetched brand
+        product.setSubCategory(subCategory);  // Setting the fetched subcategory
+        product.setCreatedAt(new Date());
+        product.setUpdatedAt(new Date());
+
+        Product savedProduct = productRepository.save(product);
+        return mapToResponse(savedProduct);
     }
 
-    public Product getProductById(Integer productId) {
-        return productRepository.findById(productId).orElse(null);
+    // Get product by ID
+    public ProductResponse getProductById(Integer productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        return mapToResponse(product);
     }
 
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    // Update a product
+    public ProductResponse updateProduct(Integer productId, ProductDto productDto) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        // Fetching and updating brand if provided
+        Brand brand = brandRepository.findById(productDto.getBrandId())
+                .orElseThrow(() -> new ResourceNotFoundException("Brand not found with ID: " + productDto.getBrandId()));
+
+        // Fetching and updating subcategory if provided
+        SubCategory subCategory = subCategoryRepository.findById(productDto.getSubCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("SubCategory not found with ID: " + productDto.getSubCategoryId()));
+
+        product.setProductName(productDto.getProductName());
+        product.setOriginalPrice(productDto.getOriginalPrice());
+        product.setUnitPrice(productDto.getUnitPrice());
+        product.setIsVisible(productDto.getIsVisible());
+        product.setBrand(brand);  // Updating the brand
+        product.setSubCategory(subCategory);  // Updating the subcategory
+        product.setUpdatedAt(new Date());
+
+        Product updatedProduct = productRepository.save(product);
+        return mapToResponse(updatedProduct);
     }
 
-    public Product updateProduct(Integer productId, Product product) {
-        if (productRepository.existsById(productId)) {
-            product.setProductId(productId);
-            return productRepository.save(product);
-        }
-        return null;
-    }
-
+    // Delete a product
     public void deleteProduct(Integer productId) {
-        productRepository.deleteById(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        productRepository.delete(product);
     }
+
+      // Get all products with filtering and search functionality
+    public List<ProductResponse> getAllProducts(Integer subCategoryId, Gender gender, String productName) {
+        List<Product> products = productRepository.findAll();
+
+        // Apply filtering by subCategoryId (integer)
+        if (subCategoryId != null) {
+            products = products.stream()
+                    .filter(product -> product.getSubCategory() != null &&
+                                      product.getSubCategory().getSubCategoryId().equals(subCategoryId))
+                    .collect(Collectors.toList());
+        }
+
+        // Apply filtering by Gender (enum)
+        if (gender != null) {
+            products = products.stream()
+                    .filter(product -> product.getSubCategory() != null &&
+                                      product.getSubCategory().getGender() != null &&
+                                      product.getSubCategory().getGender().equals(gender))
+                    .collect(Collectors.toList());
+        }
+
+        // Apply search by product name
+        if (productName != null && !productName.isEmpty()) {
+            products = products.stream()
+                    .filter(product -> product.getProductName().toLowerCase().contains(productName.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
+        // Convert Product entities to ProductResponse DTOs
+        return products.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+ private ProductResponse mapToResponse(Product product) {
+        // Fetch images associated with the product
+        List<ProductColor> images = productColorRepository.findByProduct_ProductId(product.getProductId());
+        String imageUrl = null; // Default image URL
+
+        // If there are images associated with the product, find the first one
+        if (!images.isEmpty()) {
+            imageUrl = images.get(0).getImageUrl(); // Use the first image found
+        }
+
+        return new ProductResponse(
+            product.getProductId(),
+            product.getProductName(),
+            product.getOriginalPrice(),
+            product.getUnitPrice(),
+            product.getSubCategory().getSubCategoryName(),
+            product.getBrand().getBrandName(),
+            product.getBrand().getBrandId(), // Set brandId
+            product.getSubCategory().getSubCategoryId(), // Set subCategoryId
+            product.getIsVisible(),
+            product.getSubCategory().getGender().toString(),
+            product.getCreatedAt(),
+            product.getUpdatedAt(),
+            imageUrl // Include image URL in response
+        );
+    }
+
 }

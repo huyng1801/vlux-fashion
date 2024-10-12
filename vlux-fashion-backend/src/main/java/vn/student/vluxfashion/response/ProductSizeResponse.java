@@ -1,0 +1,15 @@
+package vn.student.vluxfashion.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductSizeResponse {
+    private Integer productSizeId;
+    private String sizeValue;
+    private Integer stockQuantity;
+    private String colorName;
+}

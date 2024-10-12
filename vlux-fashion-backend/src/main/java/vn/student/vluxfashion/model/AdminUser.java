@@ -2,11 +2,11 @@ package vn.student.vluxfashion.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -18,11 +18,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Collections;
-import java.util.stream.Collectors;
+import java.util.Date;
 
 @Entity
 @Table(name = "admin_user")
@@ -33,7 +30,7 @@ public class AdminUser implements UserDetails {
 
     @Id
     @Column(name = "admin_user_id", length = 36)
-    private String userId;
+    private String adminUserId;
 
     @Column(name = "email", nullable = false, length = 256, unique = true)
     private String email;
@@ -43,6 +40,10 @@ public class AdminUser implements UserDetails {
 
     @Column(name = "hash_password", nullable = false, length = 128)
     private String hashPassword;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
@@ -54,14 +55,6 @@ public class AdminUser implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "user_role",
-        joinColumns = @JoinColumn(name = "admin_user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
 
     @Override
     public String getUsername() {
@@ -95,11 +88,6 @@ public class AdminUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (roles == null) {
-            return Collections.emptyList();
-        }
-        return roles.stream()
-            .map(role -> new SimpleGrantedAuthority(role.getRoleId()))
-            .collect(Collectors.toList());
+        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }
 }

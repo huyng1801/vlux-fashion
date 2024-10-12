@@ -9,8 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class SecurityConfiguration {
         http.csrf(csrf -> csrf
                 .disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/**", "/home/**")
+                        .requestMatchers("/**", "/home/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -46,17 +46,16 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:4200"));
-        configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-
+    public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        
+        config.setAllowedOrigins(List.of("http://localhost:3000")); // Allow your frontend
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Allowed HTTP methods
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allowed headers
+        config.setAllowCredentials(true); // If you need to send cookies or HTTP authentication
 
-        source.registerCorsConfiguration("/**",configuration);
-
-        return source;
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }

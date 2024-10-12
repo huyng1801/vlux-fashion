@@ -1,18 +1,23 @@
 package vn.student.vluxfashion.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import vn.student.vluxfashion.dto.ChangePasswordDto;
 import vn.student.vluxfashion.dto.LoginUserDto;
 import vn.student.vluxfashion.model.AdminUser;
+import vn.student.vluxfashion.model.Role;
+import vn.student.vluxfashion.response.AdminUserResponse;
 import vn.student.vluxfashion.response.LoginResponse;
+import vn.student.vluxfashion.service.AdminUserService;
 import vn.student.vluxfashion.service.AuthenticationService;
 import vn.student.vluxfashion.service.JwtService;
 
@@ -21,10 +26,12 @@ import vn.student.vluxfashion.service.JwtService;
 public class AuthenticationController {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final AdminUserService adminUserService;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, AdminUserService adminUserService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.adminUserService = adminUserService;
     }
 
     @PostMapping("/login")
@@ -32,21 +39,36 @@ public class AuthenticationController {
         // Authenticate the user
         AdminUser authenticatedUser = authenticationService.authenticate(loginUserDto);
     
-        // Get roles as a list of strings
-        List<String> roleIds = authenticatedUser.getAuthorities().stream()
-        .map(GrantedAuthority::getAuthority) 
-        .collect(Collectors.toList());
+        // Get role
+        Role role = authenticatedUser.getRole();
 
-    
         // Generate JWT token with roles
-        String jwtToken = jwtService.generateToken(authenticatedUser, roleIds);
+        String jwtToken = jwtService.generateToken(authenticatedUser, role);
     
         // Create response with token and expiration time
-        LoginResponse loginResponse = new LoginResponse()
-                .setToken(jwtToken)
-                .setExpiresIn(jwtService.getExpirationTime());
+        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
     
         return ResponseEntity.ok(loginResponse);
     }
+    @GetMapping("/me")
+    public ResponseEntity<AdminUserResponse> getAuthenticatedUser() {
+        AdminUser currentUser = getCurrentUser();
+        return ResponseEntity.ok(adminUserService.getUserById(currentUser.getAdminUserId()));
+    }
     
+    @PostMapping("/me/password")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        AdminUser currentUser = getCurrentUser();
+        adminUserService.changePassword(currentUser.getAdminUserId(), changePasswordDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    private AdminUser getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (AdminUser) authentication.getPrincipal();
+    }
 }

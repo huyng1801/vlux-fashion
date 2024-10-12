@@ -20,13 +20,13 @@ public class CategoryService {
 
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll().stream()
-                .map(this::convertToCategoryResponse)
+                .map(this::mapToCategoryResponse)
                 .collect(Collectors.toList());
     }
 
     public CategoryResponse getCategoryById(Integer categoryId) {
         return categoryRepository.findById(categoryId)
-                .map(this::convertToCategoryResponse)
+                .map(this::mapToCategoryResponse)
                 .orElse(null);
     }
 
@@ -44,7 +44,7 @@ public class CategoryService {
         category.setCreatedAt(new Date());
         category.setUpdatedAt(new Date());
         Category savedCategory = categoryRepository.save(category);
-        return convertToCategoryResponse(savedCategory);
+        return mapToCategoryResponse(savedCategory);
     }
 
     public CategoryResponse updateCategory(Integer categoryId, CategoryDto categoryDto) {
@@ -59,7 +59,7 @@ public class CategoryService {
         category.setCategoryName(categoryDto.getCategoryName());
         category.setUpdatedAt(new Date());
         Category updatedCategory = categoryRepository.save(category);
-        return convertToCategoryResponse(updatedCategory);
+        return mapToCategoryResponse(updatedCategory);
     }
 
     public boolean deleteCategory(Integer categoryId) {
@@ -70,7 +70,7 @@ public class CategoryService {
         return true; 
     }
 
-    private CategoryResponse convertToCategoryResponse(Category category) {
+    private CategoryResponse mapToCategoryResponse(Category category) {
         return new CategoryResponse(
                 category.getCategoryId(),
                 category.getCategoryName(),

@@ -47,11 +47,12 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "customer_id", nullable = true) 
     private Customer customer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "guest_id")
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = true) 
+    @JoinColumn(name = "guest_id", nullable = true)
     private Guest guest;
+    
 }

@@ -11,20 +11,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import vn.student.vluxfashion.model.AdminUser;
-import vn.student.vluxfashion.repository.UserRepository;
+import vn.student.vluxfashion.repository.AdminUserRepository;
 
 @Configuration
 public class ApplicationConfiguration {
-    private final UserRepository userRepository;
+    private final AdminUserRepository userRepository;
 
-    public ApplicationConfiguration(UserRepository userRepository) {
+    public ApplicationConfiguration(AdminUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            AdminUser user = userRepository.findByEmail(username);
+            AdminUser user = userRepository.findByEmail(username).get();
             if (user == null) {
                 throw new UsernameNotFoundException("User not found");
             }
