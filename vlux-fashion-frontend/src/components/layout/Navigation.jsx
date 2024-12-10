@@ -1,0 +1,55 @@
+import React from 'react';
+import { Menu } from 'antd';
+import { Link } from 'react-router-dom';
+
+const styles = {
+    menu: {
+        display: 'flex',
+        justifyContent: 'center',
+        background: '#001529',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '0 50px',
+        position: 'fixed',
+        width: '100%',
+        top: '64px',
+        zIndex: 999,
+    },
+    menuItem: {
+        color: '#fff',
+        fontSize: '16px',
+        padding: '0 30px',
+        margin: '0 5px',
+        transition: 'all 0.3s ease',
+        borderRadius: '4px',
+    },
+    link: {
+        color: '#fff',
+        transition: 'all 0.3s ease',
+    },
+};
+
+const Navigation = () => {
+    return (
+        <Menu
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={['1']}
+            style={styles.menu}
+        >
+            <Menu.Item key="1" style={styles.menuItem}>
+                <Link to="/home" style={styles.link}>Trang Chủ</Link>
+            </Menu.Item>
+            <Menu.Item key="2" style={styles.menuItem}>
+                <Link to="/home/product" style={styles.link}>Sản Phẩm</Link>
+            </Menu.Item>
+            <Menu.Item key="3" style={styles.menuItem}>
+                <Link to="/home/about" style={styles.link}>Giới Thiệu</Link>
+            </Menu.Item>
+            <Menu.Item key="4" style={styles.menuItem}>
+                <Link to="/home/contact" style={styles.link}>Liên Hệ</Link>
+            </Menu.Item>
+        </Menu>
+    );
+};
+
+export default Navigation;

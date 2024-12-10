@@ -19,7 +19,7 @@ const AdminLayout = ({ children }) => {
       <Sider width={250} className="site-layout-background">
         <div className="logo">
           <img src="https://odysseyhouse.com.au/wp-content/uploads/2019/08/Profile-Photo-Place-Holder.png" alt="Profile" />
-          <span className="logo_name">Huy Nguyễn</span>
+          <span className="logo_name">Như Ngọc</span>
         </div>
         <Menu
           mode="inline"
@@ -52,7 +52,7 @@ const AdminLayout = ({ children }) => {
       <Layout>
         <Header className="header">
           <div className="logo">
-            <span className="admin_name">Huy Nguyễn</span>
+            <span className="admin_name">Như Ngọc</span>
           </div>
         </Header>
         <Content style={{ margin: '0 16px' }}>

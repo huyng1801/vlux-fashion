@@ -1,60 +1,74 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Input, Button, Badge } from 'antd';
-import { Link } from 'react-router-dom';
-import { SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import './CustomerLayout.css'; // Custom styles
+import { Layout, Breadcrumb } from 'antd';
+import { Link, useLocation } from 'react-router-dom';
+import Header from '../components/layout/Header';
+import Navigation from '../components/layout/Navigation';
+import Footer from '../components/layout/Footer';
 
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
+
+const styles = {
+    layout: {
+        minHeight: '100vh',
+        background: '#f0f2f5',
+    },
+    content: {
+        padding: '134px 50px 50px',
+        background: '#f0f2f5',
+        minHeight: 'calc(100vh - 64px)',
+    },
+    breadcrumb: {
+        margin: '0 0 16px',
+        fontSize: '14px',
+        padding: '12px 24px',
+        background: '#fff',
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+    },
+    contentArea: {
+        background: '#fff',
+        padding: '32px',
+        minHeight: '280px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+        transition: 'all 0.3s ease',
+    },
+};
 
 const CustomerLayout = ({ children }) => {
-  return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header className="header">
-        <div className="logo">EcoShop</div>
-        <div className="search-bar">
-       
-          <Link to="/home/cart">
-            <Badge count={5} style={{ marginLeft: '10px' }}>
-              <Button icon={<ShoppingCartOutlined />} className="cart-button" />
-            </Badge>
-          </Link>
+    const location = useLocation();
 
-        </div>
-      </Header>
+    // Convert path into breadcrumb items
+    const pathnames = location.pathname.split('/').filter((x) => x);
+    const breadcrumbItems = pathnames.map((_, index) => {
+        const url = `/${pathnames.slice(0, index + 1).join('/')}`;
+        return (
+            <Breadcrumb.Item key={url}>
+                <Link to={url}>{pathnames[index]}</Link>
+            </Breadcrumb.Item>
+        );
+    });
 
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        defaultSelectedKeys={['1']}
-        className="menu"
-      >
-        <Menu.Item key="1">
-          <Link to="/home">Trang Chủ</Link>
-        </Menu.Item>
-        <Menu.Item key="2">
-          <Link to="home/product">Sản Phẩm</Link>
-        </Menu.Item>
-        <Menu.Item key="3">
-          <Link to="/about">Giới Thiệu</Link>
-        </Menu.Item>
-        <Menu.Item key="4">
-          <Link to="/contact">Liên Hệ</Link>
-        </Menu.Item>
-      </Menu>
+    // Add home as the first breadcrumb
+    breadcrumbItems.unshift(
+        <Breadcrumb.Item key="/">
+            <Link to="/">Trang Chủ</Link>
+        </Breadcrumb.Item>
+    );
 
-      <Content style={{ padding: '0 50px' }}>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item><Link to="/">Trang Chủ</Link></Breadcrumb.Item>
-          <Breadcrumb.Item>Sản Phẩm</Breadcrumb.Item>
-        </Breadcrumb>
-        <div className="site-layout-content">{children}</div>
-      </Content>
-
-      <Footer className="footer">
-        EcoShop ©2024 Created by Your Name
-      </Footer>
-    </Layout>
-  );
+    return (
+        <Layout style={styles.layout}>
+            <Header />
+            <Navigation />
+            <Content style={styles.content}>
+                <Breadcrumb style={styles.breadcrumb}>
+                    {breadcrumbItems}
+                </Breadcrumb>
+                <div style={styles.contentArea}>{children}</div>
+            </Content>
+            <Footer />
+        </Layout>
+    );
 };
 
 export default CustomerLayout;

@@ -30,7 +30,7 @@ public class AdminUserDataSeeder {
                 // Create an admin user
                 AdminUser adminUser = new AdminUser();
                 adminUser.setAdminUserId(GenerateUtils.generateUUID());
-                adminUser.setFullName("Huy Nguyễn");
+                adminUser.setFullName("Như Ngọc");
                 adminUser.setEmail("huynguyendev18012003@gmail.com");
                 adminUser.setHashPassword(passwordEncoder.encode("123456"));
                 adminUser.setIsActive(true);
@@ -41,7 +41,7 @@ public class AdminUserDataSeeder {
                 // Create an employee user
                 AdminUser employeeUser = new AdminUser();
                 employeeUser.setAdminUserId(GenerateUtils.generateUUID());
-                employeeUser.setFullName("Huy Nguyễn");
+                employeeUser.setFullName("Như Ngọc");
                 employeeUser.setEmail("huyng.1801@gmail.com");
                 employeeUser.setHashPassword(passwordEncoder.encode("123456")); 
                 employeeUser.setIsActive(true);
