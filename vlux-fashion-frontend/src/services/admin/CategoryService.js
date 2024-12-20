@@ -1,32 +1,57 @@
-import axios from 'axios';
+import BaseService from './BaseService';
 
-const API_URL = "http://localhost:8080/categories";  // Change the port if your Spring Boot app runs on a different port.
+const API_URL = '/categories';
 
-const getAllCategories = () => {
-  return axios.get(API_URL);
+const CategoryService = {
+  async getAllCategories() {
+    try {
+      const response = await BaseService.get(API_URL);
+      return response;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      throw error;
+    }
+  },
+
+  async getCategoryById(id) {
+    try {
+      const response = await BaseService.get(`${API_URL}/${id}`);
+      return response;
+    } catch (error) {
+      console.error(`Error fetching category with ID ${id}:`, error);
+      throw error;
+    }
+  },
+
+  async createCategory(category) {
+    try {
+      const response = await BaseService.post(API_URL, category);
+      return response;
+    } catch (error) {
+      console.error('Error creating category:', error);
+      throw error;
+    }
+  },
+
+  async updateCategory(id, category) {
+    try {
+      const response = await BaseService.put(`${API_URL}/${id}`, category);
+      return response;
+    } catch (error) {
+      console.error(`Error updating category with ID ${id}:`, error);
+      throw error;
+    }
+  },
+
+  async deleteCategory(id) {
+    try {
+      const response = await BaseService.delete(`${API_URL}/${id}`);
+      return response;
+    } catch (error) {
+      console.error(`Error deleting category with ID ${id}:`, error);
+      throw error;
+    }
+  }
 };
 
-const getCategoryById = (id) => {
-  return axios.get(`${API_URL}/${id}`);
-};
-
-const createCategory = (category) => {
-  return axios.post(API_URL, category);
-};
-
-const updateCategory = (id, category) => {
-  return axios.put(`${API_URL}/${id}`, category);
-};
-
-const deleteCategory = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
-};
-
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
-  getAllCategories,
-  getCategoryById,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-};
+export default CategoryService;

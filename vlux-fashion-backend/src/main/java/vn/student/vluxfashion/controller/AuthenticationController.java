@@ -50,6 +50,7 @@ public class AuthenticationController {
     
         return ResponseEntity.ok(loginResponse);
     }
+    
     @GetMapping("/me")
     public ResponseEntity<AdminUserResponse> getAuthenticatedUser() {
         AdminUser currentUser = getCurrentUser();

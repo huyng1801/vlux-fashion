@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, message, Image, Modal, Form, Input, Switch } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'; // Import icons
 import BannerService from '../../services/admin/BannerService'; // Ensure your API service is correctly imported
 
 const BannerList = () => {
@@ -19,7 +20,7 @@ const BannerList = () => {
     setLoading(true);
     BannerService.getAllBanners()
       .then((response) => {
-        setBanners(response.data);
+        setBanners(response);
       })
       .catch(() => {
         message.error('Lỗi khi tải danh sách banner');
@@ -152,17 +153,24 @@ const BannerList = () => {
       key: 'actions',
       render: (text, record) => (
         <span>
-          <Button type="link" onClick={() => showModal(record)}>
-            Chỉnh sửa
+          <Button
+            type="link"
+            icon={<EditOutlined />}
+            onClick={() => showModal(record)}
+          >
           </Button>
-          <Button type="link" danger onClick={() => handleDelete(record.bannerId)}>
-            Xóa
+          <Button
+            type="link"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.bannerId)}
+          >
           </Button>
         </span>
       ),
     },
   ];
-
+  
   return (
     <>
       <Button type="primary" onClick={() => showModal(null)} style={{ marginBottom: 16 }}>

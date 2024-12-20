@@ -1,50 +1,61 @@
-import axios from 'axios';
+import BaseService from './BaseService';
 
-const API_URL = "http://localhost:8080/subcategories";  // Adjust if necessary
+const API_URL = '/subcategories';
 
-const getAllSubcategories = (categoryId, gender) => {
-  let url = API_URL;
+const SubcategoryService = {
+  async getAllSubcategories(categoryId, gender) {
+    try {
+      const params = {};
+      if (categoryId) params.categoryId = categoryId;
+      if (gender) params.gender = gender;
+      
+      const response = await BaseService.get(API_URL, { params });
+      return response;
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      throw error;
+    }
+  },
 
-  // Initialize query parameters
-  const params = new URLSearchParams();
+  async getSubcategoryById(id) {
+    try {
+      const response = await BaseService.get(`${API_URL}/${id}`);
+      return response;
+    } catch (error) {
+      console.error(`Error fetching subcategory with ID ${id}:`, error);
+      throw error;
+    }
+  },
 
-  if (categoryId) {
-    params.append('categoryId', categoryId);
-  }
+  async createSubcategory(subcategory) {
+    try {
+      const response = await BaseService.post(API_URL, subcategory);
+      return response;
+    } catch (error) {
+      console.error('Error creating subcategory:', error);
+      throw error;
+    }
+  },
 
-  if (gender) {
-    params.append('gender', gender);
-  }
+  async updateSubcategory(id, subcategory) {
+    try {
+      const response = await BaseService.put(`${API_URL}/${id}`, subcategory);
+      return response;
+    } catch (error) {
+      console.error(`Error updating subcategory with ID ${id}:`, error);
+      throw error;
+    }
+  },
 
-  // Append query parameters to the URL if they exist
-  if (params.toString()) {
-    url += `?${params.toString()}`;
-  }
-
-  return axios.get(url);
+  async deleteSubcategory(id) {
+    try {
+      const response = await BaseService.delete(`${API_URL}/${id}`);
+      return response;
+    } catch (error) {
+      console.error(`Error deleting subcategory with ID ${id}:`, error);
+      throw error;
+    }
+  },
 };
 
-const getSubcategoryById = (id) => {
-  return axios.get(`${API_URL}/${id}`);
-};
-
-const createSubcategory = (subcategory) => {
-  return axios.post(API_URL, subcategory);
-};
-
-const updateSubcategory = (id, subcategory) => {
-  return axios.put(`${API_URL}/${id}`, subcategory);
-};
-
-const deleteSubcategory = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
-};
-
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
-  getAllSubcategories,
-  getSubcategoryById,
-  createSubcategory,
-  updateSubcategory,
-  deleteSubcategory,
-};
+export default SubcategoryService;

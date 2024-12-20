@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Table, Button, message, Modal, Form, Input, Select } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'; // Import icons
 import SubcategoryService from '../../services/admin/SubcategoryService';
 import CategoryService from '../../services/admin/CategoryService';
-import { Table, Button, message, Modal, Form, Input, Select } from 'antd';
 
 const { Option } = Select;
 
@@ -22,7 +23,7 @@ const SubCategoryList = () => {
   const loadCategories = () => {
     CategoryService.getAllCategories()
       .then((response) => {
-        setCategories(response.data); // Load categories
+        setCategories(response); // Load categories
       })
       .catch(() => {
         message.error("Lỗi khi tải danh mục");
@@ -32,7 +33,7 @@ const SubCategoryList = () => {
   const loadSubcategories = (categoryId = null, gender = null) => {
     SubcategoryService.getAllSubcategories(categoryId, gender) // Pass the gender filter
       .then((response) => {
-        setSubcategories(response.data);
+        setSubcategories(response);
       })
       .catch(() => {
         message.error("Lỗi khi tải danh mục phụ");
@@ -152,8 +153,8 @@ const SubCategoryList = () => {
       title: 'Thao tác',
       render: (text, record) => (
         <span>
-          <Button type="link" onClick={() => handleEdit(record)}>Sửa</Button>
-          <Button type="link" danger onClick={() => showDeleteConfirm(record.subCategoryId)}>Xóa</Button>
+          <Button type="link" icon={<EditOutlined />} onClick={() => handleEdit(record)}></Button>
+          <Button type="link" danger icon={<DeleteOutlined />} onClick={() => showDeleteConfirm(record.subCategoryId)}></Button>
         </span>
       ),
       key: 'actions',
@@ -163,7 +164,7 @@ const SubCategoryList = () => {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <Button type="primary" onClick={handleAdd}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           Thêm danh mục phụ
         </Button>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
@@ -196,9 +197,7 @@ const SubCategoryList = () => {
         </div>
       </div>
 
-
-
-      <Table dataSource={subcategories} columns={columns} rowKey="subCategoryId"  pagination={{ pageSize: 8 }} />
+      <Table dataSource={subcategories} columns={columns} rowKey="subCategoryId" pagination={{ pageSize: 8 }} />
 
       <Modal
         title={editingSubcategory ? "Sửa danh mục phụ" : "Thêm danh mục phụ"}

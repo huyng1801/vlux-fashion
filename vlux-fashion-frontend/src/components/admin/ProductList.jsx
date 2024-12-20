@@ -3,64 +3,123 @@ import ProductService from '../../services/admin/ProductService';
 import SubcategoryService from '../../services/admin/SubcategoryService';
 import BrandService from '../../services/admin/BrandService';
 import { Table, Button, message, Modal, Form, Input, Select, Switch } from 'antd';
-import ProductColorModal from './ProductColorModal'; // Import component quản lý màu sắc sản phẩm
+import ProductColorModal from './ProductColorModal';
+import { EditOutlined, DeleteOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
 const ProductList = () => {
+  // State management
   const [products, setProducts] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalStates, setModalStates] = useState({
+    productModal: false,
+    colorModal: false
+  });
   const [editingProduct, setEditingProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null); 
   const [form] = Form.useForm();
-  const [colorModalVisible, setColorModalVisible] = useState(false);
 
+  // Initial data loading
   useEffect(() => {
-    loadBrands();
-    loadProducts();
-    loadSubcategories();
+    loadInitialData();
   }, []);
 
-  const loadSubcategories = () => {
-    SubcategoryService.getAllSubcategories(null, null)
-      .then((response) => {
-        setSubcategories(response.data);
-      })
-      .catch(() => {
-        message.error("Lỗi khi tải danh mục con");
-      });
+  const loadInitialData = async () => {
+    try {
+      await Promise.all([
+        loadBrands(),
+        loadProducts(),
+        loadSubcategories()
+      ]);
+    } catch (error) {
+      message.error("Lỗi khi tải dữ liệu ban đầu");
+    }
   };
 
-  const loadBrands = () => {
-    BrandService.getAllBrands()
-      .then((response) => {
-        setBrands(response.data);
-      })
-      .catch(() => {
-        message.error("Lỗi khi tải thương hiệu");
-      });
+   // Modal handling
+   const toggleModal = (modalType, visible, product = null) => {
+    setModalStates(prev => ({
+      ...prev,
+      [modalType]: visible
+    }));
+    
+    if (modalType === 'productModal') {
+      setEditingProduct(product);
+      if (product) {
+        form.setFieldsValue({
+          productName: product.productName,
+          subCategoryId: product.subCategoryId,
+          brandId: product.brandId,
+          originalPrice: product.originalPrice,
+          unitPrice: product.unitPrice,
+          isVisible: product.isVisible,
+        });
+      } else {
+        form.resetFields();
+      }
+    } else if (modalType === 'colorModal') {
+      setSelectedProduct(product); // Set selected product for color modal
+    }
+  };
+  // Data loading functions
+  const loadSubcategories = async () => {
+    try {
+      const response = await SubcategoryService.getAllSubcategories(null, null);
+      setSubcategories(response);
+    } catch (error) {
+      message.error("Lỗi khi tải danh mục con");
+    }
   };
 
-  const loadProducts = () => {
-    ProductService.getAllProducts()
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch(() => {
-        message.error("Lỗi khi tải sản phẩm");
-      });
+  const loadBrands = async () => {
+    try {
+      const response = await BrandService.getAllBrands();
+      setBrands(response);
+    } catch (error) {
+      message.error("Lỗi khi tải thương hiệu");
+    }
   };
 
-  const handleDelete = (id) => {
-    ProductService.deleteProduct(id)
-      .then(() => {
-        message.success("Xóa sản phẩm thành công");
-        loadProducts();
-      })
-      .catch(() => {
-        message.error("Lỗi khi xóa sản phẩm");
-      });
+  const loadProducts = async () => {
+    try {
+      const response = await ProductService.getAllProducts();
+      setProducts(response);
+    } catch (error) {
+      message.error("Lỗi khi tải sản phẩm");
+    }
+  };
+
+  // Product operations
+  const handleProductSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      const productData = { ...values };
+
+      if (editingProduct) {
+        await ProductService.updateProduct(editingProduct.productId, productData);
+        message.success("Cập nhật sản phẩm thành công");
+      } else {
+        await ProductService.createProduct(productData);
+        message.success("Thêm sản phẩm thành công");
+      }
+
+      toggleModal('productModal', false);
+      loadProducts();
+    } catch (error) {
+      message.error("Vui lòng điền đầy đủ các trường bắt buộc");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await ProductService.deleteProduct(id);
+      message.success("Xóa sản phẩm thành công");
+      loadProducts();
+    } catch (error) {
+      message.error("Lỗi khi xóa sản phẩm");
+    }
   };
 
   const showDeleteConfirm = (id) => {
@@ -76,67 +135,7 @@ const ProductList = () => {
     });
   };
 
-  const handleAdd = () => {
-    setEditingProduct(null);
-    form.resetFields();
-    setIsModalVisible(true);
-  };
-
-  const handleEdit = (product) => {
-    setEditingProduct(product);
-    form.setFieldsValue({
-      productName: product.productName,
-      subCategoryId: product.subCategoryId,
-      brandId: product.brandId,
-      originalPrice: product.originalPrice,
-      unitPrice: product.unitPrice,
-      isVisible: product.isVisible,
-    });
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    form.resetFields();
-  };
-
-  const handleOk = () => {
-    form.validateFields()
-      .then((values) => {
-        const productData = { ...values };
-
-        if (editingProduct) {
-          ProductService.updateProduct(editingProduct.productId, productData)
-            .then(() => {
-              message.success("Cập nhật sản phẩm thành công");
-              loadProducts();
-            })
-            .catch(() => {
-              message.error("Lỗi khi cập nhật sản phẩm");
-            });
-        } else {
-          ProductService.createProduct(productData)
-            .then(() => {
-              message.success("Thêm sản phẩm thành công");
-              loadProducts();
-            })
-            .catch(() => {
-              message.error("Lỗi khi thêm sản phẩm");
-            });
-        }
-        setIsModalVisible(false);
-        form.resetFields();
-      })
-      .catch(() => {
-        message.error("Vui lòng điền đầy đủ các trường bắt buộc");
-      });
-  };
-
-  const handleShowColors = (product) => {
-    setEditingProduct(product); // Đặt sản phẩm để quản lý màu sắc
-    setColorModalVisible(true); // Mở modal quản lý màu sắc
-  };
-
+  // Table columns configuration
   const columns = [
     {
       title: 'ID',
@@ -174,17 +173,28 @@ const ProductList = () => {
       title: 'Trạng thái',
       dataIndex: 'isVisible',
       key: 'isVisible',
-      render: (text) => (
-        <span>{text ? 'Hiển thị' : 'Ẩn'}</span>
-      ),
+      render: (text) => <span>{text ? 'Hiển thị' : 'Ẩn'}</span>,
     },
     {
       title: 'Hành động',
-      render: (text, record) => (
+      render: (_, record) => (
         <span>
-          <Button type="link" onClick={() => handleEdit(record)}>Sửa</Button>
-          <Button type="link" onClick={() => showDeleteConfirm(record.productId)}>Xóa</Button>
-          <Button type="link" onClick={() => handleShowColors(record)}>Quản lý màu sắc</Button>
+          <Button 
+            type="link" 
+            icon={<EditOutlined />} 
+            onClick={() => toggleModal('productModal', true, record)}
+          />
+          <Button 
+            type="link" 
+            icon={<DeleteOutlined />} 
+            danger 
+            onClick={() => showDeleteConfirm(record.productId)}
+          />
+          <Button 
+            type="link" 
+            icon={<AppstoreAddOutlined />} 
+            onClick={() => toggleModal('colorModal', true, record)}
+          />
         </span>
       ),
     },
@@ -192,14 +202,27 @@ const ProductList = () => {
 
   return (
     <div>
-      <Button type="primary" onClick={handleAdd}>Thêm sản phẩm</Button>
-      <Table columns={columns} dataSource={products} rowKey="productId"  pagination={{ pageSize: 8 }} />
+      <Button 
+        type="primary" 
+        onClick={() => toggleModal('productModal', true)}
+        style={{ marginBottom: 16 }}
+      >
+        Thêm sản phẩm
+      </Button>
 
+      <Table 
+        columns={columns} 
+        dataSource={products} 
+        rowKey="productId" 
+        pagination={{ pageSize: 8 }} 
+      />
+
+      {/* Product Modal */}
       <Modal
         title={editingProduct ? "Sửa sản phẩm" : "Thêm sản phẩm"}
-        visible={isModalVisible}
-        onCancel={handleCancel}
-        onOk={handleOk}
+        open={modalStates.productModal}
+        onCancel={() => toggleModal('productModal', false)}
+        onOk={handleProductSubmit}
       >
         <Form form={form} layout="vertical">
           <Form.Item
@@ -249,17 +272,18 @@ const ProductList = () => {
           >
             <Input type="number" />
           </Form.Item>
-          <Form.Item name="isVisible" label="Hiển thị">
+          <Form.Item name="isVisible" label="Hiển thị" valuePropName="checked">
             <Switch />
           </Form.Item>
         </Form>
       </Modal>
 
-      {/* Modal quản lý màu sắc sản phẩm */}
+      {/* Color Modal */}
       <ProductColorModal
-        product={editingProduct}
-        onCancel={() => setEditingProduct(null)}
-        reloadColors={() => loadProducts()} // Tải lại màu sắc sau khi thêm/xóa
+        visible={modalStates.colorModal}
+        product={selectedProduct}
+        onCancel={() => toggleModal('colorModal', false)}
+        onSuccess={loadProducts}
       />
     </div>
   );

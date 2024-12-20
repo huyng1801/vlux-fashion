@@ -1,81 +1,77 @@
-import axios from "axios";
+import BaseService from './BaseService';
 
-const API_URL = "http://localhost:8080/brands"; // Update with your actual API base URL if necessary
+const API_URL = '/brands';
 
-// Fetch all brands
-export const getAllBrands = async () => {
+const BrandService = {
+  async getAllBrands() {
     try {
-        return await axios.get(API_URL); // Return the full Axios response
+      const response = await BaseService.get(API_URL);
+      return response;
     } catch (error) {
-        console.error("Failed to fetch brands:", error);
-        throw error; // Rethrow the error for handling in the calling function
+      console.error('Error fetching brands:', error);
+      throw error;
     }
-};
+  },
 
-// Fetch a brand by its ID
-export const getBrandById = async (id) => {
+  async getBrandById(id) {
     try {
-        return await axios.get(`${API_URL}/${id}`); // Return the full Axios response
+      const response = await BaseService.get(`${API_URL}/${id}`);
+      return response;
     } catch (error) {
-        console.error(`Failed to fetch brand with ID ${id}:`, error);
-        throw error; // Rethrow the error for handling in the calling function
+      console.error(`Error fetching brand with ID ${id}:`, error);
+      throw error;
     }
-};
+  },
 
-// Create a new brand
-export const createBrand = async (brandData) => {
+  async createBrand(brandData) {
     try {
-        const formData = new FormData();
-        formData.append("brandName", brandData.brandName);
-        if (brandData.imageFile) {
-            formData.append("imageFile", brandData.imageFile);
+      const formData = new FormData();
+      formData.append('brandName', brandData.brandName);
+      if (brandData.imageFile) {
+        formData.append('imageFile', brandData.imageFile);
+      }
+      
+      const response = await BaseService.post(API_URL, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
-        return await axios.post(API_URL, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        }); // Return the full Axios response
+      });
+      return response;
     } catch (error) {
-        console.error("Failed to create brand:", error);
-        throw error; // Rethrow the error for handling in the calling function
+      console.error('Error creating brand:', error);
+      throw error;
     }
-};
+  },
 
-// Update an existing brand by ID
-export const updateBrand = async (id, brandData) => {
+  async updateBrand(id, brandData) {
     try {
-        const formData = new FormData();
-        formData.append("brandName", brandData.brandName);
-        if (brandData.imageFile) {
-            formData.append("imageFile", brandData.imageFile);
+      const formData = new FormData();
+      formData.append('brandName', brandData.brandName);
+      if (brandData.imageFile) {
+        formData.append('imageFile', brandData.imageFile);
+      }
+      
+      const response = await BaseService.put(`${API_URL}/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
-        return await axios.put(`${API_URL}/${id}`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        }); // Return the full Axios response
+      });
+      return response;
     } catch (error) {
-        console.error(`Failed to update brand with ID ${id}:`, error);
-        throw error; // Rethrow the error for handling in the calling function
+      console.error(`Error updating brand with ID ${id}:`, error);
+      throw error;
     }
-};
+  },
 
-// Delete a brand by ID
-export const deleteBrand = async (id) => {
+  async deleteBrand(id) {
     try {
-        return await axios.delete(`${API_URL}/${id}`); // Return the full Axios response
+      const response = await BaseService.delete(`${API_URL}/${id}`);
+      return response;
     } catch (error) {
-        console.error(`Failed to delete brand with ID ${id}:`, error);
-        throw error; // Rethrow the error for handling in the calling function
+      console.error(`Error deleting brand with ID ${id}:`, error);
+      throw error;
     }
+  }
 };
 
-// Default export containing all service methods
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
-    getAllBrands,
-    getBrandById,
-    createBrand,
-    updateBrand,
-    deleteBrand,
-};
+export default BrandService;

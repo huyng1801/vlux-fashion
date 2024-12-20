@@ -1,47 +1,58 @@
-import axios from 'axios';
+import BaseService from './BaseService';
 
-const API_URL = "http://localhost:8080/products"; // Adjust if necessary
+const API_URL = '/products';
 
-const getAllProducts = (categoryId) => {
-  let url = API_URL;
+const ProductService = {
+  async getAllProducts(categoryId) {
+    try {
+      const params = categoryId ? { categoryId } : {};
+      const response = await BaseService.get(API_URL, { params });
+      return response;
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      throw error;
+    }
+  },
 
-  // Initialize query parameters
-  const params = new URLSearchParams();
+  async getProductById(id) {
+    try {
+      const response = await BaseService.get(`${API_URL}/${id}`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching product by ID:', error);
+      throw error;
+    }
+  },
 
-  if (categoryId) {
-    params.append('categoryId', categoryId);
+  async createProduct(product) {
+    try {
+      const response = await BaseService.post(API_URL, product);
+      return response;
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
+    }
+  },
+
+  async updateProduct(id, product) {
+    try {
+      const response = await BaseService.put(`${API_URL}/${id}`, product);
+      return response;
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  },
+
+  async deleteProduct(id) {
+    try {
+      const response = await BaseService.delete(`${API_URL}/${id}`);
+      return response;
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
   }
-
-  // Append query parameters to the URL if they exist
-  if (params.toString()) {
-    url += `?${params.toString()}`;
-  }
-
-  return axios.get(url);
 };
 
-const getProductById = (id) => {
-  return axios.get(`${API_URL}/${id}`);
-};
-
-const createProduct = (product) => {
-    console.log(product);
-  return axios.post(API_URL, product);
-};
-
-const updateProduct = (id, product) => {
-  return axios.put(`${API_URL}/${id}`, product);
-};
-
-const deleteProduct = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
-};
-
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
-  getAllProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-};
+export default ProductService;

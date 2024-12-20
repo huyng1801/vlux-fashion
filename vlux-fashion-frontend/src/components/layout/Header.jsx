@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Badge, Button } from 'antd';
+import { Layout, Badge, Button, Space } from 'antd';
 import { Link } from 'react-router-dom';
-import { ShoppingCartOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined, LoginOutlined, UserAddOutlined, LogoutOutlined } from '@ant-design/icons';
+import {jwtDecode} from 'jwt-decode';
 
 const { Header: AntHeader } = Layout;
 
@@ -28,10 +29,22 @@ const styles = {
         cursor: 'pointer',
         transition: 'all 0.3s ease',
     },
-    searchBar: {
+    rightSection: {
         display: 'flex',
         alignItems: 'center',
         gap: '24px',
+    },
+    button: {
+        background: 'rgba(255, 255, 255, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        color: '#fff',
+        padding: '4px 15px',
+        height: '36px',
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        borderRadius: '8px',
     },
     cartButton: {
         background: 'rgba(255, 255, 255, 0.1)',
@@ -53,6 +66,7 @@ const styles = {
 
 const Header = () => {
     const [cartCount, setCartCount] = useState(0);
+    const [username, setUsername] = useState(null);  // Store the username if logged in
 
     useEffect(() => {
         // Initial cart count
@@ -60,6 +74,17 @@ const Header = () => {
 
         // Listen for storage changes
         window.addEventListener('storage', updateCartCount);
+
+        // Decode JWT token if available
+        const token = localStorage.getItem('jwt'); // Assuming JWT is stored in localStorage
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                setUsername(decodedToken.username);  // Extract username from the token
+            } catch (err) {
+                console.error('Invalid token', err);
+            }
+        }
 
         // Cleanup listener
         return () => {
@@ -73,33 +98,79 @@ const Header = () => {
         setCartCount(totalItems);
     };
 
+    const buttonHoverEffect = (e) => {
+        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+        e.currentTarget.style.transform = 'translateY(-2px)';
+    };
+
+    const buttonLeaveEffect = (e) => {
+        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+        e.currentTarget.style.transform = 'translateY(0)';
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('jwt'); // Remove token from localStorage
+        setUsername(null); // Clear username state
+        window.location.reload(); // Reload to reflect changes
+    };
+
     return (
         <AntHeader style={styles.header}>
-            <Link to="/home">
+            <Link to="/">
                 <div style={styles.logo}>EcoShop</div>
             </Link>
-            <div style={styles.searchBar}>
-                <Link to="/home/cart">
-                    <Badge 
-                        count={cartCount} 
-                        style={styles.badge}
-                        offset={[-5, 5]}
-                        showZero
-                    >
+            <div style={styles.rightSection}>
+                <Space size={16}>
+                    {!username ? (
+                        <>
+                            <Link to="/login">
+                                <Button 
+                                    icon={<LoginOutlined />}
+                                    style={styles.button}
+                                    onMouseEnter={buttonHoverEffect}
+                                    onMouseLeave={buttonLeaveEffect}
+                                >
+                                    Đăng nhập
+                                </Button>
+                            </Link>
+                            <Link to="/register">
+                                <Button 
+                                    icon={<UserAddOutlined />}
+                                    style={styles.button}
+                                    onMouseEnter={buttonHoverEffect}
+                                    onMouseLeave={buttonLeaveEffect}
+                                >
+                                    Đăng ký
+                                </Button>
+                            </Link>
+                        </>
+                    ) : (
                         <Button 
-                            icon={<ShoppingCartOutlined />} 
-                            style={styles.cartButton}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                                e.currentTarget.style.transform = 'translateY(0)';
-                            }}
-                        />
-                    </Badge>
-                </Link>
+                            icon={<LogoutOutlined />}
+                            style={styles.button}
+                            onClick={handleLogout}
+                            onMouseEnter={buttonHoverEffect}
+                            onMouseLeave={buttonLeaveEffect}
+                        >
+                            Đăng xuất
+                        </Button>
+                    )}
+                    <Link to="/cart">
+                        <Badge 
+                            count={cartCount} 
+                            style={styles.badge}
+                            offset={[-5, 5]}
+                            showZero
+                        >
+                            <Button 
+                                icon={<ShoppingCartOutlined />} 
+                                style={styles.cartButton}
+                                onMouseEnter={buttonHoverEffect}
+                                onMouseLeave={buttonLeaveEffect}
+                            />
+                        </Badge>
+                    </Link>
+                </Space>
             </div>
         </AntHeader>
     );

@@ -84,7 +84,7 @@ const SuccessPage = () => {
     const [hoveredButton, setHoveredButton] = React.useState(false);
 
     const handleContinueShopping = () => {
-        navigate('/home');
+        navigate('/');
     };
 
     return (

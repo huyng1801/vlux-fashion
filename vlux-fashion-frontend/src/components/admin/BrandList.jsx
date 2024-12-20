@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, message, Modal, Form, Input } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons"; // Import icons
 import BrandService from "../../services/admin/BrandService"; // Import the BrandService
 
 const BrandList = () => {
@@ -18,8 +19,8 @@ const BrandList = () => {
   const fetchBrands = async () => {
     setLoading(true);
     try {
-      const resonse = await BrandService.getAllBrands();
-      setBrands(resonse.data);
+      const response = await BrandService.getAllBrands();
+      setBrands(response);
     } catch (error) {
       message.error("Lỗi khi tải danh sách thương hiệu");
     } finally {
@@ -124,12 +125,17 @@ const BrandList = () => {
       key: "actions",
       render: (text, record) => (
         <span>
-          <Button type="link" onClick={() => showModal(record)}>
-            Chỉnh sửa
-          </Button>
-          <Button type="link" danger onClick={() => handleDelete(record.brandId)}>
-            Xóa
-          </Button>
+          <Button
+            type="link"
+            icon={<EditOutlined />} // Using edit icon
+            onClick={() => showModal(record)}
+          />
+          <Button
+            type="link"
+            danger
+            icon={<DeleteOutlined />} // Using delete icon
+            onClick={() => handleDelete(record.brandId)}
+          />
         </span>
       ),
     },

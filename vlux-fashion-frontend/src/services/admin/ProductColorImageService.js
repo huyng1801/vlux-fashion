@@ -1,21 +1,37 @@
-// src/services/ProductColorImageService.js
-import axios from 'axios';
+import BaseService from './BaseService';
 
-const API_URL = 'http://127.0.0.1:8080/product-color-images'; // Replace with your actual API endpoint
+const API_URL = '/product-color-images';
 
 const ProductColorImageService = {
-  addImageToColor: (formData) => {
-    console.log("add" + formData);
-    return axios.post(`${API_URL}`, formData).then(response => response.data);
+  async addImageToColor(formData) {
+    try {
+      const response = await BaseService.post(API_URL, formData);
+      return response;
+    } catch (error) {
+      console.error('Error adding image:', error);
+      throw error;
+    }
   },
 
-  deleteImageFromColor: (imageId) => {
-    return axios.delete(`${API_URL}/${imageId}`).then(response => response.data);
+  async deleteImageFromColor(imageId) {
+    try {
+      const response = await BaseService.delete(`${API_URL}/${imageId}`);
+      return response;
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      throw error;
+    }
   },
 
-  getImagesByColorId: (colorId) => {
-    return axios.get(`${API_URL}/color/${colorId}`).then(response => response.data);
-  },
+  async getImagesByColorId(colorId) {
+    try {
+      const response = await BaseService.get(`${API_URL}/color/${colorId}`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      throw error;
+    }
+  }
 };
 
 export default ProductColorImageService;

@@ -71,34 +71,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-                // API Access Control
-        // String requestUri = request.getRequestURI();
-        // String requestMethod = request.getMethod();
-        // if (requestUri.contains("/")) {
-        //     filterChain.doFilter(request, response);
-        //     return;
-        // }
-
-
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // if (authentication != null && authentication.isAuthenticated()) {
-        //     Set<String> roleIds = new HashSet<>();
-        //     Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-            
-        //     for (GrantedAuthority authority : authorities) {
-        //         // Assuming authority.getAuthority() returns a role ID or something like "ROLE_<roleId>"
-        //         String authorityString = authority.getAuthority();
-        //         // Extract role ID, e.g., remove "ROLE_" prefix
-        //         String roleId = authorityString.replace("ROLE_", "");
-        //         roleIds.add(roleId);
-        //     }
-
-     
-        // } else {
-        //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        //     response.getWriter().write("Unauthorized");
-        //     return;
-        // }
 
         filterChain.doFilter(request, response);
     }

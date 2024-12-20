@@ -30,17 +30,21 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf
-                .disable())
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/**", "/home/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
-                .sessionManagement(management -> management
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        // Enable CORS and configure it
+        http.csrf(csrf -> csrf.disable())
+            .cors()  // Enabling CORS filter
+            .and()
+            .authorizeRequests()
+                .requestMatchers("/**", "/home/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+            .and()
+            .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -53,9 +57,9 @@ public class SecurityConfiguration {
         config.setAllowedOrigins(List.of("http://localhost:3000")); // Allow your frontend
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Allowed HTTP methods
         config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allowed headers
-        config.setAllowCredentials(true); // If you need to send cookies or HTTP authentication
+        config.setAllowCredentials(true); // Allow credentials like cookies or HTTP authentication
 
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return new CorsFilter(source);  // Apply CORS filter
     }
 }

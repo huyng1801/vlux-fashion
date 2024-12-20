@@ -150,7 +150,8 @@ const Banner = () => {
     return (
         <div style={styles.container}>
             <Slider {...settings} style={styles.slider}>
-                {banners.map((banner) => (
+                {banners.filter((banner) => banner.isVisible)
+                .map((banner) => (
                     <div key={banner.id} style={styles.slide}>
                         <img
                             src={banner.imageUrl}

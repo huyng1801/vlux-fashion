@@ -89,7 +89,7 @@ const ProductCard = ({ product }) => {
             bodyStyle={{ padding: 0 }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            onClick={() => navigate(`/home/product/${product.productId}`)}
+            onClick={() => navigate(`/product/${product.productId}`)}
             cover={
                 <div style={styles.imageContainer}>
                     <img

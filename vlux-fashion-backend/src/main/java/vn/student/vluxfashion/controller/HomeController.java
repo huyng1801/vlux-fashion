@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.student.vluxfashion.dto.GuestDto;
+import vn.student.vluxfashion.dto.LoginUserDto;
 import vn.student.vluxfashion.dto.OrderDto;
 import vn.student.vluxfashion.dto.OrderItemDto;
 import vn.student.vluxfashion.dto.OrderRequestDto;
+import vn.student.vluxfashion.dto.RegisterDto;
+import vn.student.vluxfashion.exception.InvalidCredentialsException;
+import vn.student.vluxfashion.exception.ResourceNotFoundException;
 import vn.student.vluxfashion.model.Banner;
+import vn.student.vluxfashion.model.Customer;
 import vn.student.vluxfashion.model.Gender;
 import vn.student.vluxfashion.model.Guest;
 import vn.student.vluxfashion.model.Order;
@@ -28,6 +33,7 @@ import vn.student.vluxfashion.response.ProductSizeResponse;
 import vn.student.vluxfashion.response.SubCategoryResponse;
 import vn.student.vluxfashion.service.BannerService;
 import vn.student.vluxfashion.service.CategoryService;
+import vn.student.vluxfashion.service.CustomerService;
 import vn.student.vluxfashion.service.OrderService;
 import vn.student.vluxfashion.service.ProductColorImageService;
 import vn.student.vluxfashion.service.ProductColorService;
@@ -62,10 +68,11 @@ public class HomeController {
     @Autowired
     private ProductColorImageService productColorImageService;
 
- @Autowired
-    private OrderService orderService; 
+    @Autowired
+    private OrderService orderService;
 
-
+    @Autowired
+    private CustomerService customerService;
     @GetMapping("/product-color/{productId}")
     public ResponseEntity<List<ProductColorResponse>> findByProductId(@PathVariable Integer productId) {
         List<ProductColorResponse> response = productColorService.findByProduct_ProductId(productId);
@@ -77,19 +84,20 @@ public class HomeController {
         List<Banner> banners = bannerService.getAllBanners();
         return ResponseEntity.ok(banners);
     }
+
     // Endpoint to get all categories
     @GetMapping("categories")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
-    
+
     // Endpoint to get subcategories based on categoryId and gender
     @GetMapping("subcategories")
     public ResponseEntity<List<SubCategoryResponse>> getSubCategories(
             @RequestParam(value = "categoryId", required = false) Integer categoryId,
             @RequestParam(value = "gender", required = false) Gender gender) {
-        
+
         List<SubCategoryResponse> subCategories = subCategoryService.getSubCategories(categoryId, gender);
         return ResponseEntity.ok(subCategories);
     }
@@ -100,21 +108,26 @@ public class HomeController {
             @RequestParam(required = false) Integer subCategoryId,
             @RequestParam(required = false) Gender gender,
             @RequestParam(required = false) String productName) {
-        
+
         List<ProductResponse> productResponses = productService.getAllProducts(subCategoryId, gender, productName);
         return ResponseEntity.ok(productResponses);
     }
+
     @GetMapping("product-size/product-color/{productColorId}")
     public ResponseEntity<List<ProductSizeResponse>> findByProductColorId(@PathVariable Integer productColorId) {
         List<ProductSizeResponse> response = productSizeService.findByProductColorId(productColorId);
         return ResponseEntity.ok(response);
     }
-      // Get all images by Product Color ID
+
+    // Get all images by Product Color ID
     @GetMapping("product-image/product-color/{productColorId}")
-    public ResponseEntity<List<ProductColorImageResponse>> getImagesByProductColorId(@PathVariable Integer productColorId) {
-        List<ProductColorImageResponse> productColorImages = productColorImageService.findByProductColorId(productColorId);
+    public ResponseEntity<List<ProductColorImageResponse>> getImagesByProductColorId(
+            @PathVariable Integer productColorId) {
+        List<ProductColorImageResponse> productColorImages = productColorImageService
+                .findByProductColorId(productColorId);
         return ResponseEntity.ok(productColorImages);
     }
+
     // Get product by ID
     @GetMapping("product/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable("id") Integer productId) {
@@ -124,17 +137,38 @@ public class HomeController {
         }
         return ResponseEntity.ok(productResponse);
     }
+
     @PostMapping("orders")
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequestDto orderRequestDto) {
         // Extract guest and order details from the request DTO
         GuestDto guestDto = orderRequestDto.getGuestDto();
         OrderDto orderDto = orderRequestDto.getOrderDto();
         List<OrderItemDto> orderItemDtos = orderRequestDto.getOrderItemDtos();
-    
-        // Call the order service to create the order with the provided guest and order items
+
+        // Call the order service to create the order with the provided guest and order
+        // items
         OrderResponse orderResponse = orderService.createOrder(guestDto, orderDto, orderItemDtos);
         return ResponseEntity.ok(orderResponse);
     }
-    
+
+    @PostMapping("register")
+    public ResponseEntity<Customer> register(@RequestBody RegisterDto registerDto) {
+        try {
+            Customer registeredCustomer = customerService.register(registerDto);
+            return ResponseEntity.ok(registeredCustomer);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<String> login(@RequestBody LoginUserDto loginDto) {
+        try {
+            String token = customerService.login(loginDto);
+            return ResponseEntity.ok(token); // Return JWT token
+        } catch (ResourceNotFoundException | InvalidCredentialsException e) {
+            return ResponseEntity.status(401).body("Invalid credentials."); 
+        }
+    }
 
 }

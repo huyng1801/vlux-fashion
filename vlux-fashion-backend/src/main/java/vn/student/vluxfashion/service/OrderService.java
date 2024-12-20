@@ -17,6 +17,7 @@ import vn.student.vluxfashion.repository.GuestRepository;
 import vn.student.vluxfashion.repository.OrderRepository;
 import vn.student.vluxfashion.repository.OrderItemRepository;
 import vn.student.vluxfashion.repository.ProductSizeRepository;
+import vn.student.vluxfashion.response.OrderItemResponse;
 import vn.student.vluxfashion.response.OrderResponse;
 
 import java.text.SimpleDateFormat;
@@ -51,7 +52,7 @@ public class OrderService {
         guest.setCity(guestDto.getCity());
         guest.setCreatedAt(new Date());
         guest.setUpdatedAt(new Date());
-        
+
         Guest savedGuest = guestRepository.save(guest);
 
         // Generate Order ID based on current date and time (ddMMyyyyHHmmss)
@@ -109,16 +110,14 @@ public class OrderService {
         orderResponse.setOrderNote(savedOrder.getOrderNote());
         orderResponse.setPaymentMethod(savedOrder.getPaymentMethod());
         orderResponse.setTotalPrice(savedOrder.getTotalPrice());
-  
-        orderResponse.setOrderStatus(savedOrder.getOrderStatus());
 
+        orderResponse.setOrderStatus(savedOrder.getOrderStatus());
 
         if (savedGuest != null) {
             orderResponse.setGuestName(savedGuest.getFullName());
         }
         return orderResponse;
     }
-
 
     public List<OrderResponse> getAllOrders() {
         return orderRepository.findAll().stream()
@@ -131,4 +130,26 @@ public class OrderService {
                 .map(order -> mapOrderToResponse(order, order.getGuest()))
                 .orElse(null);
     }
+
+    private OrderItemResponse mapOrderItemToResponse(OrderItem orderItem) {
+        OrderItemResponse orderItemResponse = new OrderItemResponse();
+        orderItemResponse.setProductName(orderItem.getProductSize().getProductColor().getProduct().getProductName()); 
+                                                                                         
+        orderItemResponse.setColorName(orderItem.getProductSize().getProductColor().getColorName()); 
+                                                                                      
+        orderItemResponse.setSizeValue(orderItem.getProductSize().getSizeValue());
+                                                                                     
+        orderItemResponse.setQuantity(orderItem.getQuantity());
+        orderItemResponse.setUnitPrice(orderItem.getUnitPrice());
+        return orderItemResponse;
+    }
+
+    public List<OrderItemResponse> getOrderItemsByOrderId(String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderId));
+        return orderItemRepository.findByOrder(order).stream()
+                .map(this::mapOrderItemToResponse)
+                .collect(Collectors.toList());
+    }
+
 }

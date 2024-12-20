@@ -99,21 +99,41 @@ export const getProductById = async (productId) => {
 };
 
 // Create a new order
-export const createOrder = async (guestDto, orderDto, orderItemDtos) => {
+export const createOrder = async (orderData) => {
     try {
-        // Create the payload object
-        const orderRequestDto = {
-            guestDto,
-            orderDto,
-            orderItemDtos,
-        };
+
 
         // Send the request with the payload in the body
-        const response = await axios.post(`${BASE_URL}/orders`, orderRequestDto);
+        const response = await axios.post(`${BASE_URL}/orders`, orderData);
 
         return response.data; // Assuming the response contains order details
     } catch (error) {
         console.error("Error creating order:", error);
         throw error; // Rethrow the error for further handling
+    }
+};
+
+// Login method to authenticate a user
+export const login = async (email, password) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/login`, {
+            email,
+            password,
+        });
+        return response.data; 
+    } catch (error) {
+        console.error("Error logging in:", error);
+        throw error; 
+    }
+};
+
+// Register method to create a new user
+export const register = async (registerData) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/register`, registerData);
+        return response.data; 
+    } catch (error) {
+        console.error("Error registering user:", error);
+        throw error; 
     }
 };

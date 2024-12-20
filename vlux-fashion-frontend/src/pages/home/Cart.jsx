@@ -248,7 +248,7 @@ const Cart = () => {
     };
 
     const handleCheckout = () => {
-        navigate('/home/checkout');
+        navigate('/checkout');
     };
 
     if (loading) {
@@ -275,7 +275,7 @@ const Cart = () => {
                             type="primary"
                             icon={<ShoppingOutlined />}
                             style={styles.shopNowButton}
-                            onClick={() => navigate('/home')}
+                            onClick={() => navigate('/')}
                         >
                             Mua Sắm Ngay
                         </Button>

@@ -11,32 +11,41 @@ import OrderPage from './pages/admin/OrderPage';
 import HomePage from './pages/home/HomePage';
 import ProductDetails from './pages/home/ProductDetails';
 import Cart from './pages/home/Cart';
-import CheckoutPage from './pages/home/Checkout';
+import CheckoutPage from './pages/home/CheckoutPage';
 import SuccessPage from './pages/home/SuccessPage';
 import Product from './pages/home/Product';
 import AboutPage from './pages/home/AboutPage';
 import ContactPage from './pages/home/ContactPage';
+import LoginPage from './pages/home/LoginPage';
+import RegisterPage from './pages/home/RegisterPage';
+import AdminLoginPage from './pages/admin/AdminLoginPage';
 
+import { AuthProvider } from './contexts/AuthContext';
 function App() {
   return (
     <Router>
+          <AuthProvider>
         <Routes>
-          <Route path="/" element={<DashboardPage />} /> 
-          <Route path="/categories" element={<CategoryPage />} /> 
-          <Route path="/banners" element={<BannerPage />} /> 
-          <Route path="/brands" element={<BrandPage />} /> 
-          <Route path="/subcategories" element={<SubCategoryPage />} /> 
-          <Route path="/products" element={<ProductPage />} /> 
-          <Route path="/orders" element={<OrderPage />} /> 
-          <Route path="/home" element={<HomePage />} /> 
-          <Route path="/home/product" element={<Product />} /> 
-          <Route path="/home/product/:productId" element={<ProductDetails />} />
-          <Route path="/home/cart/" element={<Cart />} />
-          <Route path="/home/about/" element={<AboutPage />} />
-          <Route path="/home/contact/" element={<ContactPage />} />
-          <Route path="/home/checkout/" element={<CheckoutPage />} />
-          <Route path="/home/success/" element={<SuccessPage />} />
+          <Route path="/admin/dashboard" element={<DashboardPage />} /> 
+          <Route path="/admin/login" element={<AdminLoginPage />} /> 
+          <Route path="/admin/category" element={<CategoryPage />} /> 
+          <Route path="/admin/banner" element={<BannerPage />} /> 
+          <Route path="/admin/brand" element={<BrandPage />} /> 
+          <Route path="/admin/subcategory" element={<SubCategoryPage />} /> 
+          <Route path="/admin/product" element={<ProductPage />} /> 
+          <Route path="/admin/order" element={<OrderPage />} /> 
+          <Route path="/" element={<HomePage />} /> 
+          <Route path="/login" element={<LoginPage />} /> 
+          <Route path="/register" element={<RegisterPage />} /> 
+          <Route path="/product" element={<Product />} /> 
+          <Route path="/product/:productId" element={<ProductDetails />} />
+          <Route path="/cart/" element={<Cart />} />
+          <Route path="/about/" element={<AboutPage />} />
+          <Route path="/contact/" element={<ContactPage />} />
+          <Route path="/checkout/" element={<CheckoutPage />} />
+          <Route path="/success/" element={<SuccessPage />} />
         </Routes>
+        </AuthProvider>
     </Router>
   );
 }

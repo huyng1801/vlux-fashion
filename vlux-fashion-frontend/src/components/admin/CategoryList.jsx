@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CategoryService from '../../services/admin/CategoryService';
 import { Table, Button, message, Modal, Form, Input } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'; // Importing the icons
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -15,7 +16,7 @@ const CategoryList = () => {
   const loadCategories = () => {
     CategoryService.getAllCategories()
       .then((response) => {
-        setCategories(response.data);
+        setCategories(response);
       })
       .catch(() => {
         message.error("Lỗi khi tải danh mục");
@@ -101,8 +102,8 @@ const CategoryList = () => {
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'categoryId', // Đảm bảo phù hợp với cấu trúc dữ liệu
-      key: 'categoryId', // Khóa duy nhất cho cột này
+      dataIndex: 'categoryId',
+      key: 'categoryId',
     },
     {
       title: 'Tên danh mục',
@@ -113,11 +114,11 @@ const CategoryList = () => {
       title: 'Thao tác',
       render: (text, record) => (
         <span>
-          <Button type="link" onClick={() => handleEdit(record)}>Sửa</Button>
-          <Button type="link" danger onClick={() => showDeleteConfirm(record.categoryId)}>Xóa</Button>
+          <Button type="link" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+          <Button type="link" danger icon={<DeleteOutlined />} onClick={() => showDeleteConfirm(record.categoryId)} />
         </span>
       ),
-      key: 'actions', // Khóa duy nhất cho cột này
+      key: 'actions',
     },
   ];
 
@@ -126,7 +127,7 @@ const CategoryList = () => {
       <Button type="primary" onClick={handleAdd} style={{ marginBottom: '20px' }}>
         Thêm danh mục
       </Button>
-      <Table dataSource={categories} columns={columns} rowKey="categoryId"  pagination={{ pageSize: 8 }} /> {/* Đảm bảo khóa duy nhất này phù hợp */}
+      <Table dataSource={categories} columns={columns} rowKey="categoryId" pagination={{ pageSize: 8 }} />
 
       {/* Modal để thêm/sửa danh mục */}
       <Modal

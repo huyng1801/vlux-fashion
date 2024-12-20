@@ -37,16 +37,16 @@ const Navigation = () => {
             style={styles.menu}
         >
             <Menu.Item key="1" style={styles.menuItem}>
-                <Link to="/home" style={styles.link}>Trang Chủ</Link>
+                <Link to="/" style={styles.link}>Trang Chủ</Link>
             </Menu.Item>
             <Menu.Item key="2" style={styles.menuItem}>
-                <Link to="/home/product" style={styles.link}>Sản Phẩm</Link>
+                <Link to="/product" style={styles.link}>Sản Phẩm</Link>
             </Menu.Item>
             <Menu.Item key="3" style={styles.menuItem}>
-                <Link to="/home/about" style={styles.link}>Giới Thiệu</Link>
+                <Link to="/about" style={styles.link}>Giới Thiệu</Link>
             </Menu.Item>
             <Menu.Item key="4" style={styles.menuItem}>
-                <Link to="/home/contact" style={styles.link}>Liên Hệ</Link>
+                <Link to="/contact" style={styles.link}>Liên Hệ</Link>
             </Menu.Item>
         </Menu>
     );

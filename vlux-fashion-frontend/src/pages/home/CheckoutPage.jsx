@@ -131,7 +131,7 @@ const CheckoutPage = () => {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             if (cart.length === 0) {
                 message.warning('Giỏ hàng của bạn đang trống');
-                navigate('/home/cart');
+                navigate('/cart');
                 return;
             }
 
@@ -201,11 +201,11 @@ const CheckoutPage = () => {
                     price: item.unitPrice,
                 })),
             };
-
+      
             await createOrder(orderData);
             message.success('Đặt hàng thành công!');
             localStorage.removeItem('cart');
-            navigate('/home/success');
+            navigate('/success');
         } catch (error) {
             message.error('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
             console.error('Error creating order:', error);
@@ -230,7 +230,7 @@ const CheckoutPage = () => {
                 <div style={styles.emptyCart}>
                     <ShoppingOutlined style={{ fontSize: '48px', color: '#001529' }} />
                     <Title level={3}>Giỏ hàng trống</Title>
-                    <Button type="primary" onClick={() => navigate('/home')}>
+                    <Button type="primary" onClick={() => navigate('/')}>
                         Tiếp tục mua sắm
                     </Button>
                 </div>

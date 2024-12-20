@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import vn.student.vluxfashion.response.OrderItemResponse;
 import vn.student.vluxfashion.response.OrderResponse;
 import vn.student.vluxfashion.service.OrderService;
 
@@ -32,6 +33,23 @@ public class OrderController {
             return new ResponseEntity<>(orderResponse, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+      // Get order items by order ID
+    @GetMapping("/{orderId}/items")
+    public ResponseEntity<List<OrderItemResponse>> getOrderItemsByOrderId(@PathVariable String orderId) {
+        try {
+            List<OrderItemResponse> orderItems = orderService.getOrderItemsByOrderId(orderId);
+            if (orderItems != null && !orderItems.isEmpty()) {
+                return new ResponseEntity<>(orderItems, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Order not found
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // General error
         }
     }
 }
